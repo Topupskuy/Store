@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kunjungan Iframe (Refresh, Pop-up, Hujan+Salju, Audio)</title>
+  <title>Kunjungan Iframe (Refresh, Pop-up, Salju Lambat + Audio)</title>
   <style>
     :root{
       /* Ubah transparansi background pop-up di sini (0 = transparan, 1 = solid) */
@@ -39,12 +39,12 @@
       color: #555;
     }
 
-    /* Kanvas efek (di atas iframe utama, di bawah pop-up) */
+    /* Kanvas efek salju (DI ATAS pop-up) */
     #fxCanvas{
       position: fixed; inset: 0;
-      z-index: 100; /* di atas main iframe */
-      pointer-events: none; /* jangan blok interaksi */
-      display: none; /* baru aktif setelah klik pertama */
+      z-index: 1002;          /* > popup (1000) */
+      pointer-events: none;   /* tidak blok interaksi */
+      display: none;          /* aktif setelah klik pertama */
     }
 
     /* Iframe utama */
@@ -57,14 +57,14 @@
       background: #fff;
     }
 
-    /* Pop-up iframe full overlay (99% x 100%) */
+    /* Pop-up iframe (99% x 100%) */
     #popupWrap{
       position: fixed;
       top: 0; left: 0;
-      width: 50%; /* 99% lebar viewport */
-      height: 100%;
-      display: none; /* aktif setelah interaksi */
-      z-index: 1000; /* di atas semuanya */
+      width: 99vw;            /* 99% lebar viewport */
+      height: 100vh;
+      display: none;          /* aktif setelah interaksi */
+      z-index: 1000;          /* di bawah salju */
       background: var(--popup-bg);
       box-sizing: border-box;
       padding: 0.5vw 0 0 0.5vw; /* sedikit ruang agar 99% terlihat */
@@ -93,12 +93,12 @@
   <div id="overlay">
     <div class="inner">
       <strong>Sentuh / klik di mana saja untuk memulai.</strong><br/>
-      Iframe akan aktif, efek hujan + salju dan audio akan berjalan, serta pop-up muncul di atas.
+      Iframe akan aktif, efek salju lambat & audio akan berjalan, serta pop-up muncul di atas.
       <div class="hint">Kebijakan browser mengharuskan ada interaksi pengguna untuk memutar audio & memuat konten tertentu.</div>
     </div>
   </div>
 
-  <!-- Kanvas efek hujan+salju -->
+  <!-- Kanvas efek salju -->
   <canvas id="fxCanvas"></canvas>
 
   <!-- Iframe utama -->
@@ -121,6 +121,7 @@
     ];
     const popupUrl = "https://storeskuy.blogspot.com";
     const refreshIntervalMs = 30_000; // 30 detik
+
     const audioSrc = "audio.mp3"; // GANTI ke file MP3 milikmu (misal: ./bg.mp3)
     const audioVolume = 0.6;      // 0.0 - 1.0
 
@@ -152,7 +153,7 @@
       bgAudio.src = audioSrc;
       bgAudio.volume = audioVolume;
       // play setelah user gesture
-      bgAudio.play().catch(()=>{ /* jika gagal, user bisa klik lagi tombol apa saja untuk play */ });
+      bgAudio.play().catch(()=>{ /* jika gagal, klik lagi area mana pun untuk memulai */ });
 
       // set urls pertama kali
       cycleMain();
@@ -161,8 +162,8 @@
       // refresh tiap 30 detik, bergantian URL
       ticker = setInterval(cycleMain, refreshIntervalMs);
 
-      // mulai efek hujan+salju
-      startWeatherFX();
+      // mulai efek salju lambat
+      startSnowFX();
     }
 
     ['click', 'touchstart', 'keydown', 'mousemove'].forEach(evt => {
@@ -183,8 +184,8 @@
       popupWrap.style.display = 'none';
     });
 
-    // ================== EFEK HUJAN + SALJU ==================
-    function startWeatherFX(){
+    // ================== EFEK SALJU LAMBAT + PENUMPUKAN ==================
+    function startSnowFX(){
       const ctx = fxCanvas.getContext('2d');
       const DPR = Math.max(1, Math.round(window.devicePixelRatio || 1));
 
@@ -196,83 +197,124 @@
       window.addEventListener('resize', resize);
       resize();
 
-      // Partikel hujan
-      const rainCount = 220; // banyaknya tetes
-      const rains = [];
-      for (let i=0;i<rainCount;i++){
-        rains.push({
-          x: Math.random()*window.innerWidth,
-          y: Math.random()*window.innerHeight,
-          len: 10 + Math.random()*14,
-          spd: 4 + Math.random()*6,
-          w: 1 + Math.random()*1.2,
-        });
-      }
-
-      // Partikel salju
-      const snowCount = 140;
+      // Partikel salju kecil & lambat
+      const snowCount = 140; // jumlah flake yang jatuh
       const snows = [];
-      for (let i=0;i<snowCount;i++){
-        snows.push({
+      function makeFlake(){
+        return {
           x: Math.random()*window.innerWidth,
-          y: Math.random()*window.innerHeight,
-          r: 1 + Math.random()*3,
-          vy: 0.6 + Math.random()*1.4,
-          vx: -0.6 + Math.random()*1.2,
-          drift: (Math.random()*0.02) + 0.01
-        });
+          y: -10 - Math.random()*window.innerHeight,    // sebaran awal
+          r: 0.6 + Math.random()*1.6,                   // kecil-kecil
+          vy: 0.20 + Math.random()*0.55,                // lambat
+          vx: -0.25 + Math.random()*0.5,                // sedikit drift
+          drift: (Math.random()*0.02) + 0.006,
+          rot: Math.random()*Math.PI*2,                 // rotasi untuk bentuk non-lingkaran
+          shape: ["circle","square","triangle","cross"][ (Math.random()*4)|0 ]
+        };
+      }
+      for (let i=0;i<snowCount;i++) snows.push(makeFlake());
+
+      // Tumpukan di bawah: bertahan ±10 detik
+      const pile = []; // {x,y,r,shape,rot,created}
+      const PILE_LIFETIME = 10_000; // ms
+
+      // Menggambar bentuk flake kecil
+      function drawFlake(x,y,r,shape,rot){
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rot || 0);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#ffffff";
+
+        switch(shape){
+          case "circle":
+            ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+            break;
+          case "square":
+            ctx.beginPath(); ctx.rect(-r, -r, 2*r, 2*r); ctx.fill();
+            break;
+          case "triangle":
+            ctx.beginPath();
+            const h = r*2.2;
+            ctx.moveTo(0,-h/2);
+            ctx.lineTo(-r, h/2);
+            ctx.lineTo(r, h/2);
+            ctx.closePath(); ctx.fill();
+            break;
+          case "cross":
+            ctx.lineWidth = Math.max(1, r*0.8);
+            ctx.beginPath(); ctx.moveTo(-r*1.2,0); ctx.lineTo(r*1.2,0); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0,-r*1.2); ctx.lineTo(0,r*1.2); ctx.stroke();
+            break;
+        }
+        ctx.restore();
       }
 
       const wind = { t: 0 };
 
-      function step(){
+      function step(ts){
         ctx.clearRect(0,0,fxCanvas.width, fxCanvas.height);
 
         // Sedikit angin dinamis
-        wind.t += 0.005;
-        const windX = Math.sin(wind.t)*0.6;
+        wind.t += 0.0045;
+        const windX = Math.sin(wind.t)*0.25;
 
-        // HUJAN
-        ctx.globalAlpha = 0.7;
-        ctx.strokeStyle = '#6ec3ff';
-        ctx.lineCap = 'round';
-        for (const r of rains){
-          ctx.lineWidth = r.w;
-          ctx.beginPath();
-          ctx.moveTo(r.x, r.y);
-          ctx.lineTo(r.x + windX*8, r.y + r.len);
-          ctx.stroke();
-
-          r.x += windX*0.8;
-          r.y += r.spd + r.len*0.03;
-
-          if (r.y > window.innerHeight + 20){
-            r.y = -20;
-            r.x = Math.random()*window.innerWidth;
+        // Gambar & update tumpukan (yang sudah mendarat)
+        const now = performance.now();
+        for (let i = pile.length - 1; i >= 0; i--){
+          const p = pile[i];
+          // sedikit “settling” visual tipis
+          // (opsional: bisa beri fade menjelang akhir umur)
+          const age = now - p.created;
+          if (age > PILE_LIFETIME){
+            pile.splice(i,1);
+            continue;
           }
-          if (r.x < -20) r.x = window.innerWidth + 20;
-          if (r.x > window.innerWidth + 20) r.x = -20;
+          // opacity turun sedikit mendekati akhir
+          const fade = Math.max(0.2, 1 - (age / PILE_LIFETIME));
+          ctx.globalAlpha = fade;
+          drawFlake(p.x, p.y, p.r, p.shape, p.rot);
+          ctx.globalAlpha = 1;
         }
 
-        // SALJU
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = '#ffffff';
+        // Gambar & update flake jatuh
+        ctx.globalAlpha = 0.95;
         for (const s of snows){
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-          ctx.fill();
-          s.vx += Math.sin((s.y + wind.t*100)*s.drift)*0.002;
-          s.x += s.vx + windX*0.3;
+          drawFlake(s.x, s.y, s.r, s.shape, s.rot);
+
+          // drift & gerak lambat
+          s.vx += Math.sin((s.y + wind.t*100)*s.drift)*0.0008;
+          s.x += s.vx + windX*0.15;
           s.y += s.vy;
 
-          if (s.y > window.innerHeight + 5){
-            s.y = -10;
-            s.x = Math.random()*window.innerWidth;
-            s.vx = -0.6 + Math.random()*1.2;
+          // rotasi perlahan untuk variasi
+          s.rot += 0.01 * (s.vx >= 0 ? 1 : -1);
+
+          // Jika menyentuh dasar, pindahkan ke tumpukan & respawn flake baru
+          if (s.y >= window.innerHeight - s.r - 1){
+            pile.push({
+              x: s.x,
+              y: window.innerHeight - s.r - 1,
+              r: s.r,
+              shape: s.shape,
+              rot: s.rot,
+              created: now
+            });
+            // respawn dari atas
+            const fresh = makeFlake();
+            fresh.x = Math.random()*window.innerWidth;
+            fresh.y = -10 - Math.random()*40;
+            Object.assign(s, fresh);
           }
+
+          // wrap horizontal
           if (s.x < -10) s.x = window.innerWidth + 10;
           if (s.x > window.innerWidth + 10) s.x = -10;
+
+          // jika (karena resize) melangkahi layar terlalu jauh
+          if (s.y < -60) s.y = -20;
         }
+        ctx.globalAlpha = 1;
 
         rafId = requestAnimationFrame(step);
       }
