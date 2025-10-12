@@ -23,9 +23,9 @@
     #popupFrame {
       position: fixed;
       top: ;
-      right: 1;
-      width: 99%;
-      height: 99%;
+      right: ;
+      width: 50%;
+      height: 100%;
       border: 2px solid #aaa;
       background: white;
       z-index: 9999;
@@ -52,19 +52,25 @@
 
   <div id="overlay">Sentuh atau klik untuk memulai kunjungan...</div>
 
-  <!-- Pop-up iframe tambahan -->
-  <iframe id="popupFrame" src=""></iframe>
-
-  <!-- Iframe utama -->
-  <iframe id="mainFrame" src=""></iframe>
-
   <script>
+    const urls = [
+      "https://example.com", 
+      "https://example.org"
+    ];
+    let index = 0;
+    const iframe = document.getElementById('popupFrame');
+
+    // Ganti URL setiap 30 detik untuk uji refresh
+    setInterval(() => {
+      index = (index + 1) % urls.length;
+      iframe.src = urls[index] + '?t=' + Date.now();
+    }, 30000);
+  
     const overlay = document.getElementById('overlay');
     const mainFrame = document.getElementById('mainFrame');
     const popupFrame = document.getElementById('popupFrame');
 
-    // URL iframe utama dan pop-up
-    const mainUrl = "https://jargonthugconfessed.com/rigxzxmw4?key=1083746753524088ad6b003868517a0e";      // ganti dengan URL target
+    // URL pop-up
     const popupUrl = "https://storeskuy.blogspot.com"; // ganti dengan URL pop-up
 
     let interval;
@@ -74,14 +80,8 @@
       mainFrame.style.display = "block";
       popupFrame.style.display = "block";
 
-      mainFrame.src = mainUrl;
+      
       popupFrame.src = popupUrl;
-
-      // Refresh iframe setiap 30 detik
-      interval = setInterval(() => {
-        mainFrame.src = mainUrl + "?t=" + Date.now(); // cache buster
-      }, 30000);
-    }
 
     // Aktifkan iframe setelah ada interaksi
     ['click', 'touchstart', 'mousemove', 'keydown'].forEach(evt => {
