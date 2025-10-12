@@ -1,93 +1,289 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iframe Otomatis Refresh</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kunjungan Iframe (Refresh, Pop-up, Hujan+Salju, Audio)</title>
   <style>
-    body {
+    :root{
+      /* Ubah transparansi background pop-up di sini (0 = transparan, 1 = solid) */
+      --popup-bg: rgba(0,0,0,0.0);
+    }
+    html, body {
       margin: 0;
-      background: #f0f0f0;
+      height: 100%;
+      background: #0b0b0b;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow: hidden;
     }
 
-    /* iframe utama */
+    /* Overlay instruksi awal */
+    #overlay {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.9);
+      z-index: 99999;
+      cursor: pointer;
+      text-align: center;
+      padding: 24px;
+      line-height: 1.4;
+    }
+    #overlay .inner{
+      max-width: 560px;
+      color: #111;
+      font-size: 20px;
+    }
+    #overlay .hint{
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Kanvas efek (di atas iframe utama, di bawah pop-up) */
+    #fxCanvas{
+      position: fixed; inset: 0;
+      z-index: 100; /* di atas main iframe */
+      pointer-events: none; /* jangan blok interaksi */
+      display: none; /* baru aktif setelah klik pertama */
+    }
+
+    /* Iframe utama */
     #mainFrame {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+      display: none; /* aktif setelah interaksi */
+      z-index: 1;
+      background: #fff;
+    }
+
+    /* Pop-up iframe full overlay (99% x 100%) */
+    #popupWrap{
+      position: fixed;
+      top: 0; left: 0;
+      width: 50%; /* 99% lebar viewport */
+      height: 100%;
+      display: none; /* aktif setelah interaksi */
+      z-index: 1000; /* di atas semuanya */
+      background: var(--popup-bg);
+      box-sizing: border-box;
+      padding: 0.5vw 0 0 0.5vw; /* sedikit ruang agar 99% terlihat */
+    }
+    #popupFrame{
       width: 100%;
       height: 100%;
       border: none;
-      display: none; /* baru muncul setelah interaksi */
+      background: transparent;
     }
-
-    /* pop-up di atas iframe */
-    #popupFrame {
-      position: fixed;
-      top: ;
-      right: ;
-      width: 50%;
-      height: 100%;
-      border: 2px solid #aaa;
-      background: white;
-      z-index: 9999;
-      display: none; /* baru muncul saat iframe aktif */
-    }
-
-    /* overlay awal sebelum user interaksi */
-    #overlay {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: sans-serif;
-      font-size: 20px;
-      color: #333;
+    /* Tombol tutup pop-up */
+    #closePopup{
+      position: absolute; top: 10px; right: 10px;
+      z-index: 1001;
+      background: rgba(0,0,0,0.6);
+      color: #fff; border: 0; padding: 10px 12px; border-radius: 10px;
       cursor: pointer;
+      backdrop-filter: blur(2px);
     }
+    #closePopup:hover{ background: rgba(0,0,0,0.8); }
   </style>
 </head>
 <body>
 
-  <div id="overlay">Sentuh atau klik untuk memulai kunjungan...</div>
+  <!-- Overlay awal -->
+  <div id="overlay">
+    <div class="inner">
+      <strong>Sentuh / klik di mana saja untuk memulai.</strong><br/>
+      Iframe akan aktif, efek hujan + salju dan audio akan berjalan, serta pop-up muncul di atas.
+      <div class="hint">Kebijakan browser mengharuskan ada interaksi pengguna untuk memutar audio & memuat konten tertentu.</div>
+    </div>
+  </div>
+
+  <!-- Kanvas efek hujan+salju -->
+  <canvas id="fxCanvas"></canvas>
+
+  <!-- Iframe utama -->
+  <iframe id="mainFrame" src=""></iframe>
+
+  <!-- Pop-up iframe -->
+  <div id="popupWrap">
+    <button id="closePopup" title="Tutup pop-up">Tutup Pop-up</button>
+    <iframe id="popupFrame" src=""></iframe>
+  </div>
+
+  <!-- Audio (diinisiasi via JS setelah klik) -->
+  <audio id="bgAudio" loop></audio>
 
   <script>
-    const urls = [
-      "https://example.com", 
-      "https://example.org"
+    // ================== KONFIGURASI ==================
+    const mainUrls = [
+      "https://www.google.com",
+      "https://www.youtube.com"
     ];
-    let index = 0;
-    const iframe = document.getElementById('popupFrame');
+    const popupUrl = "https://storeskuy.blogspot.com";
+    const refreshIntervalMs = 30_000; // 30 detik
+    const audioSrc = "audio.mp3"; // GANTI ke file MP3 milikmu (misal: ./bg.mp3)
+    const audioVolume = 0.6;      // 0.0 - 1.0
 
-    // Ganti URL setiap 30 detik untuk uji refresh
-    setInterval(() => {
-      index = (index + 1) % urls.length;
-      iframe.src = urls[index] + '?t=' + Date.now();
-    }, 30000);
-  
-    const overlay = document.getElementById('overlay');
+    // ================== ELEMEN DOM ==================
+    const overlay   = document.getElementById('overlay');
     const mainFrame = document.getElementById('mainFrame');
-    const popupFrame = document.getElementById('popupFrame');
+    const popupWrap = document.getElementById('popupWrap');
+    const popupFrame= document.getElementById('popupFrame');
+    const closePopup= document.getElementById('closePopup');
+    const fxCanvas  = document.getElementById('fxCanvas');
+    const bgAudio   = document.getElementById('bgAudio');
 
-    // URL pop-up
-    const popupUrl = "https://storeskuy.blogspot.com"; // ganti dengan URL pop-up
+    let started = false;
+    let idx = 0;
+    let ticker = null;
+    let rafId = null;
 
-    let interval;
+    // ================== MULAI SETELAH INTERAKSI ==================
+    function startAll(){
+      if (started) return;
+      started = true;
 
-    function startIframe() {
-      overlay.style.display = "none";
-      mainFrame.style.display = "block";
-      popupFrame.style.display = "block";
+      overlay.style.display   = 'none';
+      mainFrame.style.display = 'block';
+      popupWrap.style.display = 'block';
+      fxCanvas.style.display  = 'block';
 
-      
+      // load audio
+      bgAudio.src = audioSrc;
+      bgAudio.volume = audioVolume;
+      // play setelah user gesture
+      bgAudio.play().catch(()=>{ /* jika gagal, user bisa klik lagi tombol apa saja untuk play */ });
+
+      // set urls pertama kali
+      cycleMain();
       popupFrame.src = popupUrl;
 
-    // Aktifkan iframe setelah ada interaksi
-    ['click', 'touchstart', 'mousemove', 'keydown'].forEach(evt => {
-      window.addEventListener(evt, () => {
-        if (!interval) startIframe();
-      }, { once: true });
+      // refresh tiap 30 detik, bergantian URL
+      ticker = setInterval(cycleMain, refreshIntervalMs);
+
+      // mulai efek hujan+salju
+      startWeatherFX();
+    }
+
+    ['click', 'touchstart', 'keydown', 'mousemove'].forEach(evt => {
+      window.addEventListener(evt, startAll, { once: true, passive: true });
+    });
+
+    // ================== LOGIKA MAIN IFRAME ==================
+    function cycleMain(){
+      const url = mainUrls[idx % mainUrls.length];
+      const bust = (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      // reload dengan cache-buster
+      mainFrame.src = url + bust;
+      idx++;
+    }
+
+    // ================== POP-UP CONTROL ==================
+    closePopup.addEventListener('click', () => {
+      popupWrap.style.display = 'none';
+    });
+
+    // ================== EFEK HUJAN + SALJU ==================
+    function startWeatherFX(){
+      const ctx = fxCanvas.getContext('2d');
+      const DPR = Math.max(1, Math.round(window.devicePixelRatio || 1));
+
+      function resize(){
+        fxCanvas.width  = Math.floor(window.innerWidth * DPR);
+        fxCanvas.height = Math.floor(window.innerHeight * DPR);
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Partikel hujan
+      const rainCount = 220; // banyaknya tetes
+      const rains = [];
+      for (let i=0;i<rainCount;i++){
+        rains.push({
+          x: Math.random()*window.innerWidth,
+          y: Math.random()*window.innerHeight,
+          len: 10 + Math.random()*14,
+          spd: 4 + Math.random()*6,
+          w: 1 + Math.random()*1.2,
+        });
+      }
+
+      // Partikel salju
+      const snowCount = 140;
+      const snows = [];
+      for (let i=0;i<snowCount;i++){
+        snows.push({
+          x: Math.random()*window.innerWidth,
+          y: Math.random()*window.innerHeight,
+          r: 1 + Math.random()*3,
+          vy: 0.6 + Math.random()*1.4,
+          vx: -0.6 + Math.random()*1.2,
+          drift: (Math.random()*0.02) + 0.01
+        });
+      }
+
+      const wind = { t: 0 };
+
+      function step(){
+        ctx.clearRect(0,0,fxCanvas.width, fxCanvas.height);
+
+        // Sedikit angin dinamis
+        wind.t += 0.005;
+        const windX = Math.sin(wind.t)*0.6;
+
+        // HUJAN
+        ctx.globalAlpha = 0.7;
+        ctx.strokeStyle = '#6ec3ff';
+        ctx.lineCap = 'round';
+        for (const r of rains){
+          ctx.lineWidth = r.w;
+          ctx.beginPath();
+          ctx.moveTo(r.x, r.y);
+          ctx.lineTo(r.x + windX*8, r.y + r.len);
+          ctx.stroke();
+
+          r.x += windX*0.8;
+          r.y += r.spd + r.len*0.03;
+
+          if (r.y > window.innerHeight + 20){
+            r.y = -20;
+            r.x = Math.random()*window.innerWidth;
+          }
+          if (r.x < -20) r.x = window.innerWidth + 20;
+          if (r.x > window.innerWidth + 20) r.x = -20;
+        }
+
+        // SALJU
+        ctx.globalAlpha = 0.9;
+        ctx.fillStyle = '#ffffff';
+        for (const s of snows){
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+          ctx.fill();
+          s.vx += Math.sin((s.y + wind.t*100)*s.drift)*0.002;
+          s.x += s.vx + windX*0.3;
+          s.y += s.vy;
+
+          if (s.y > window.innerHeight + 5){
+            s.y = -10;
+            s.x = Math.random()*window.innerWidth;
+            s.vx = -0.6 + Math.random()*1.2;
+          }
+          if (s.x < -10) s.x = window.innerWidth + 10;
+          if (s.x > window.innerWidth + 10) s.x = -10;
+        }
+
+        rafId = requestAnimationFrame(step);
+      }
+      step();
+    }
+
+    // Opsional: hentikan semua saat unload
+    window.addEventListener('beforeunload', () => {
+      if (ticker) clearInterval(ticker);
+      if (rafId) cancelAnimationFrame(rafId);
+      try{ bgAudio.pause(); }catch(e){}
     });
   </script>
 </body>
