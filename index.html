@@ -2,27 +2,15 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
+  <meta content="width=550px,width-scale=550px" name="viewport">
 
   <title>TOPUPSKUY - APP PREMIUM, TOPUP GAME, EWALLET, AND MORE!!</title>
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://topupskuy.github.io/payment">
-  <meta
-    property="og:title"
-    content="TOPUPSKUY - App Premium, Topup Game, eWallet, dan Lainnya!"
-  >
-  <meta
-    property="og:description"
-    content="Topup cepat & murah untuk game, eWallet, hingga layanan app premium. Mudah, aman, 24/7."
-  >
-  <meta
-    property="og:image"
-    content="https://hisoka.net/file/IMG_20250826_083458-1761413991.png"
-  >
+  <meta property="og:url" content="https://topupskuy.github.io">
+  <meta property="og:title" content="TOPUPSKUY - App Premium, Topup Game, eWallet, dan Lainnya!">
+  <meta property="og:description" content="Topup cepat & murah untuk game, eWallet, hingga layanan app premium. Mudah, aman, 24/7.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/Tskuy/Save/refs/heads/main/.github/workflows/headerskuy.png">
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
@@ -35,15 +23,9 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
       background: #0b0b0b;
-      font-family:
-        system-ui,
-        -apple-system,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      overflow: hidden;
     }
 
     body {
@@ -51,133 +33,73 @@
     }
 
     /* =========================================================
-       BACKGROUND ENGINE
-       ========================================================= */
+       BACKGROUND ADS
+       Dua unit iklan langsung dimuat ketika halaman dibuka.
+       Tidak ada lagi iframe 1 / iframe 2.
+    ========================================================= */
 
     #mainWrap {
       position: fixed;
       inset: 0;
       z-index: 1;
-      overflow: hidden;
-      background: #0b0b0b;
-    }
-
-    #iframeStage,
-    #adStage {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ================= PHASE 1: IFRAMES ================= */
-
-    #iframeStage {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      background: #0b0b0b;
-    }
-
-    #iframeStage.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #iframeStage.is-off {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    #mainFrameTop,
-    #mainFrameBottom {
-      flex: 1 1 0;
-      min-height: 0;
-      width: 100%;
-      border: 0;
-      background: #fff;
-    }
-
-    /* ================= PHASE 2: ADS ================= */
-
-    #adStage {
       display: grid;
       grid-template-rows: 1fr 1fr;
       gap: 2px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      background: #f2f2f2;
-    }
-
-    #adStage.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
+      overflow: hidden;
+      background: #0b0b0b;
     }
 
     .ad-slot {
       position: relative;
       min-height: 0;
+      width: 100%;
       overflow: auto;
       display: grid;
       place-items: center;
       align-content: center;
-      background: #fff;
+      background: #ffffff;
       isolation: isolate;
     }
 
-    .ad-mount {
+    .ad-inner {
       width: 100%;
       min-height: 90px;
       display: grid;
       place-items: center;
     }
 
-    .ad-placeholder {
-      padding: 14px 16px;
-      color: #777;
-      font-size: 12px;
-      line-height: 1.45;
-      font-weight: 700;
-      text-align: center;
-    }
-
     /* =========================================================
-       FULL-SCREEN SPECIAL POPUP
-       ========================================================= */
+       FULLSCREEN POPUP
+    ========================================================= */
 
     #popupWrap {
       position: fixed;
       inset: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, .9);
+      background: rgba(255, 255, 255, 0.9);
       padding: .5px;
     }
 
     #popupFrame {
-      display: block;
       width: 100%;
       height: 100%;
-      border: 0;
+      border: none;
       background: #aaa;
+      display: block;
     }
 
     /* =========================================================
-       FX
-       ========================================================= */
+       SNOW FX
+    ========================================================= */
 
     #fxCanvas,
     #pileCanvas {
       position: fixed;
       inset: 0;
-      z-index: 2000;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
+      z-index: 2000;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -189,661 +111,198 @@
   </style>
 </head>
 
-<body id="clickAd">
+<body>
 
-  <!-- FX -->
+  <!-- SNOW FX -->
   <canvas id="pileCanvas"></canvas>
   <canvas id="fxCanvas"></canvas>
 
   <!-- =======================================================
-       BACKGROUND ENGINE
-       ======================================================= -->
-  <div id="mainWrap">
+       BACKGROUND ADS
+       Tidak ada iframe sumber lagi.
+  ======================================================== -->
+  <main id="mainWrap">
 
-    <!-- PHASE 1:
-         iframe 1 + iframe 2 hidup selama 1 detik -->
-    <div id="iframeStage">
-      <iframe
-        id="mainFrameTop"
-        title="Main Frame Top"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+    <!-- IKLAN 1 -->
+    <section class="ad-slot" id="adSlot1" aria-label="Iklan 1">
+      <div class="ad-inner">
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://pl30814783.effectivecpmnetwork.com/8bf152dbe40c9dd67fc871d3792b8f34/invoke.js">
+        </script>
 
-      <iframe
-        id="mainFrameBottom"
-        title="Main Frame Bottom"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </div>
+        <div id="container-8bf152dbe40c9dd67fc871d3792b8f34"></div>
+      </div>
+    </section>
 
-    <!-- PHASE 2:
-         setelah iframe mati, iklan 1 + iklan 2 aktif -->
-    <div id="adStage" aria-label="Advertisement area">
+    <!-- IKLAN 2 -->
+    <section class="ad-slot" id="adSlot2" aria-label="Iklan 2">
+      <div class="ad-inner">
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://pl30814815.effectivecpmnetwork.com/97f9357130ae32b8c013e028ef88278f/invoke.js">
+        </script>
 
-      <section class="ad-slot" id="adSlot1">
-        <div class="ad-mount" id="adMount1">
-          <div class="ad-placeholder">
-            Iklan 1 menunggu fase iframe selesai.
-          </div>
-        </div>
-      </section>
+        <div id="container-97f9357130ae32b8c013e028ef88278f"></div>
+      </div>
+    </section>
 
-      <section class="ad-slot" id="adSlot2">
-        <div class="ad-mount" id="adMount2">
-          <div class="ad-placeholder">
-            Iklan 2 menunggu fase iframe selesai.
-          </div>
-        </div>
-      </section>
-
-    </div>
-  </div>
+  </main>
 
   <!-- =======================================================
-       SPECIAL POPUP
-       ======================================================= -->
+       VISIBLE PAGE / FULLSCREEN SPECIAL
+  ======================================================== -->
   <div id="popupWrap">
     <iframe
       id="popupFrame"
       src="https://tskuy.github.io/Special/"
       title="TOPUPSKUY Special"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
   </div>
 
   <script>
-  (() => {
-    "use strict";
-
-    /* =========================================================
-       CONFIG
-       ========================================================= */
-
-    const IFRAME_URL_1 =
-      "https://taxdifferenceinvestor.com/naaq6stzqq?key=780733da867b0dbb407eb328d7cc081a";
-
-    const IFRAME_URL_2 =
-      "https://taxdifferenceinvestor.com/y8xkaga3?key=a76c21871b4da3970e648e89688051f3";
-
-    /*
-      Popup yang terlihat oleh user.
-      Karena domainnya berbeda dari parent, klik di dalam popup
-      tidak bisa dibaca langsung oleh parent.
-    */
-    const SPECIAL_ORIGIN = "https://tskuy.github.io";
-
-    /*
-      Masa aktif iframe setelah trigger pertama.
-    */
-    const IFRAME_LIFETIME_MS = 1000;
-
-    /*
-      Iklan 1
-    */
-    const AD_1_SCRIPT =
-      "https://pl30814783.effectivecpmnetwork.com/8bf152dbe40c9dd67fc871d3792b8f34/invoke.js";
-
-    const AD_1_CONTAINER_ID =
-      "container-8bf152dbe40c9dd67fc871d3792b8f34";
-
-    /*
-      Iklan 2
-    */
-    const AD_2_SCRIPT =
-      "https://pl30814815.effectivecpmnetwork.com/97f9357130ae32b8c013e028ef88278f/invoke.js";
-
-    const AD_2_CONTAINER_ID =
-      "container-97f9357130ae32b8c013e028ef88278f";
-
-
-    /* =========================================================
-       ELEMENTS
-       ========================================================= */
-
-    const iframeStage =
-      document.getElementById("iframeStage");
-
-    const adStage =
-      document.getElementById("adStage");
-
-    const topFrame =
-      document.getElementById("mainFrameTop");
-
-    const bottomFrame =
-      document.getElementById("mainFrameBottom");
-
-    const adMount1 =
-      document.getElementById("adMount1");
-
-    const adMount2 =
-      document.getElementById("adMount2");
-
-    const popupFrame =
-      document.getElementById("popupFrame");
-
-
-    /* =========================================================
-       STATE
-       ========================================================= */
-
-    let lifecycleStarted = false;
-    let adsLoaded = false;
-    let iframeTimer = null;
-
-
-    /* =========================================================
-       HELPERS
-       ========================================================= */
-
-    function addCacheBust(url) {
-      const separator =
-        url.includes("?") ? "&" : "?";
-
-      return (
-        url +
-        separator +
-        "_ts=" +
-        Date.now() +
-        "-" +
-        Math.floor(Math.random() * 1000000)
-      );
-    }
-
-
-    /* =========================================================
-       PHASE 1 — LOAD IFRAMES
-       ========================================================= */
-
-    function loadSourceIframes() {
-      iframeStage.classList.remove("is-off");
-      iframeStage.classList.add("is-active");
-
-      adStage.classList.remove("is-active");
-
-      topFrame.src =
-        addCacheBust(IFRAME_URL_1);
-
-      bottomFrame.src =
-        addCacheBust(IFRAME_URL_2);
-    }
-
-
-    /* =========================================================
-       STOP IFRAMES
-       ========================================================= */
-
-    function destroySourceIframes() {
-      /*
-        about:blank meminta browser meninggalkan resource
-        eksternal terlebih dahulu.
-      */
-      try {
-        topFrame.src = "about:blank";
-        bottomFrame.src = "about:blank";
-      } catch (error) {
-        console.warn(
-          "Tidak dapat mengosongkan iframe:",
-          error
-        );
-      }
-
-      /*
-        Setelah itu atribut src dilepas agar resource tidak
-        terus melekat pada lifecycle halaman ini.
-      */
-      topFrame.removeAttribute("src");
-      bottomFrame.removeAttribute("src");
-
-      iframeStage.classList.remove("is-active");
-      iframeStage.classList.add("is-off");
-    }
-
-
-    /* =========================================================
-       AD ENGINE
-       ========================================================= */
-
-    function buildAdUnit(
-      mount,
-      containerId,
-      scriptUrl
-    ) {
-      mount.replaceChildren();
-
-      /*
-        Container iklan.
-      */
-      const container =
-        document.createElement("div");
-
-      container.id = containerId;
-      container.style.width = "100%";
-      container.style.minHeight = "1px";
-
-      /*
-        Script resmi unit iklan.
-      */
-      const script =
-        document.createElement("script");
-
-      script.async = true;
-      script.setAttribute(
-        "data-cfasync",
-        "false"
-      );
-
-      script.src = scriptUrl;
-
-      script.addEventListener(
-        "error",
-        () => {
-          const errorText =
-            document.createElement("div");
-
-          errorText.className =
-            "ad-placeholder";
-
-          errorText.textContent =
-            "Unit iklan gagal dimuat.";
-
-          mount.appendChild(errorText);
-        },
-        { once: true }
-      );
-
-      /*
-        Container dimasukkan terlebih dahulu.
-        Setelah itu script vendor dijalankan.
-      */
-      mount.appendChild(container);
-      mount.appendChild(script);
-    }
-
-
-    function loadAdsOnce() {
-      if (adsLoaded) {
-        return;
-      }
-
-      adsLoaded = true;
-
-      buildAdUnit(
-        adMount1,
-        AD_1_CONTAINER_ID,
-        AD_1_SCRIPT
-      );
-
-      buildAdUnit(
-        adMount2,
-        AD_2_CONTAINER_ID,
-        AD_2_SCRIPT
-      );
-    }
-
-
-    function activateAds() {
-      iframeStage.classList.remove("is-active");
-      iframeStage.classList.add("is-off");
-
-      adStage.classList.add("is-active");
-
-      loadAdsOnce();
-    }
-
-
-    /* =========================================================
-       FULL LIFECYCLE
-       ========================================================= */
-
-    function startLifecycle() {
-      /*
-        Hanya boleh dimulai satu kali.
-      */
-      if (lifecycleStarted) {
-        return;
-      }
-
-      lifecycleStarted = true;
-
-      /*
-        1. Kedua iframe ON.
-      */
-      loadSourceIframes();
-
-      /*
-        2. Bertahan 1 detik.
-      */
-      iframeTimer =
-        window.setTimeout(
-          () => {
-            iframeTimer = null;
-
-            /*
-              3. Kedua iframe OFF.
-            */
-            destroySourceIframes();
-
-            /*
-              4. Diganti dua unit iklan.
-            */
-            activateAds();
-          },
-          IFRAME_LIFETIME_MS
-        );
-    }
-
-
-    /* =========================================================
-       SPECIAL IFRAME -> PARENT
-       ========================================================= */
-
-    /*
-      Karena https://tskuy.github.io/Special/ adalah iframe
-      cross-origin, klik di dalamnya tidak bubble ke halaman
-      payment.
-
-      Cara yang benar adalah halaman Special mengirim postMessage:
-
-        window.parent.postMessage(
-          { type: "TOPUPSKUY_FIRST_CLICK" },
-          "https://topupskuy.github.io"
-        );
-
-      Parent menerima pesan tersebut di listener berikut.
-    */
-
-    window.addEventListener(
-      "message",
-      event => {
-        /*
-          Jangan menerima pesan dari domain sembarang.
-        */
-        if (
-          event.origin !== SPECIAL_ORIGIN
-        ) {
-          return;
-        }
+    (function () {
+      "use strict";
+
+      /* =====================================================
+         OPTIONAL INTERACTION HOOK
+         -----------------------------------------------------
+         Klik yang terjadi di dalam iframe Special tidak dapat
+         dibaca langsung oleh halaman parent jika berbeda origin.
+
+         Jika halaman Special milik kamu ingin mengirim event
+         ke parent, gunakan postMessage dari halaman Special:
+
+         window.parent.postMessage(
+           { type: "TOPUPSKUY_INTERACTION" },
+           "https://topupskuy.github.io"
+         );
+
+         Handler di bawah hanya menerima event tersebut.
+         Tidak melakukan reload iklan secara paksa.
+      ====================================================== */
+
+      window.addEventListener("message", function (event) {
+        if (event.origin !== "https://tskuy.github.io") return;
 
         if (
-          !event.data ||
-          typeof event.data !== "object"
+          event.data &&
+          typeof event.data === "object" &&
+          event.data.type === "TOPUPSKUY_INTERACTION"
         ) {
-          return;
+          console.info("TOPUPSKUY interaction received.");
+        }
+      });
+
+      /* =====================================================
+         SNOW FX
+      ====================================================== */
+
+      function startSnow() {
+        const fx = document.getElementById("fxCanvas");
+        const pile = document.getElementById("pileCanvas");
+
+        if (!fx || !pile) return;
+
+        const ctxFx = fx.getContext("2d");
+        const ctxPile = pile.getContext("2d");
+
+        let flakes = [];
+        let running = true;
+        let rafId = null;
+
+        function resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+
+          fx.width = Math.floor(width * dpr);
+          fx.height = Math.floor(height * dpr);
+          pile.width = Math.floor(width * dpr);
+          pile.height = Math.floor(height * dpr);
+
+          fx.style.width = width + "px";
+          fx.style.height = height + "px";
+          pile.style.width = width + "px";
+          pile.style.height = height + "px";
+
+          ctxFx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctxPile.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const amount = window.innerWidth <= 600 ? 70 : 120;
+
+          flakes = Array.from({ length: amount }, function () {
+            return {
+              x: Math.random() * width,
+              y: Math.random() * height,
+              r: Math.random() * 2 + 1,
+              v: Math.random() * 0.5 + 0.2,
+              drift: Math.random() * 0.25 - 0.125,
+              alpha: Math.random() * 0.45 + 0.45
+            };
+          });
         }
 
-        if (
-          event.data.type ===
-          "TOPUPSKUY_FIRST_CLICK"
-        ) {
-          startLifecycle();
-        }
+        function tick() {
+          if (!running) return;
 
-        /*
-          Hook interaksi tambahan dari Special.
-          Tidak me-reload iklan secara paksa.
-        */
-        if (
-          event.data.type ===
-          "TOPUPSKUY_INTERACTION"
-        ) {
-          requestProviderApprovedAdRefresh();
-        }
-      }
-    );
+          ctxFx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
+          for (let i = 0; i < flakes.length; i++) {
+            const f = flakes[i];
 
-    /* =========================================================
-       PARENT CLICK FALLBACK
-       ========================================================= */
+            ctxFx.beginPath();
+            ctxFx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+            ctxFx.fillStyle = "rgba(255,255,255," + f.alpha + ")";
+            ctxFx.fill();
 
-    /*
-      Jika suatu elemen parent sendiri menerima klik,
-      lifecycle juga dapat dimulai.
+            f.y += f.v;
+            f.x += f.drift;
 
-      Catatan:
-      klik di dalam #popupFrame tidak masuk ke listener ini
-      karena popup adalah dokumen cross-origin.
-    */
-    document.addEventListener(
-      "click",
-      event => {
-        if (!lifecycleStarted) {
-          startLifecycle();
-          return;
-        }
+            if (f.y > window.innerHeight + 5) {
+              f.y = -5;
+              f.x = Math.random() * window.innerWidth;
+            }
 
-        /*
-          Setelah iklan aktif, sediakan hook untuk refresh resmi
-          dari provider. Script iklan tidak di-reinject secara
-          otomatis pada setiap arbitrary click.
-        */
-        if (adsLoaded) {
-          requestProviderApprovedAdRefresh();
-        }
-      },
-      { passive: true }
-    );
+            if (f.x < -5) {
+              f.x = window.innerWidth + 5;
+            }
 
-
-    /* =========================================================
-       PROVIDER-APPROVED AD REFRESH HOOK
-       ========================================================= */
-
-    function requestProviderApprovedAdRefresh() {
-      /*
-        Tempatkan API refresh resmi milik provider di sini
-        apabila provider memang mengizinkannya.
-
-        Contoh bentuk umum:
-
-          window.SomeAdProvider.refresh(...);
-
-        Jangan re-inject invoke.js secara paksa pada setiap klik
-        kecuali dokumentasi/provider secara eksplisit
-        mengizinkannya.
-      */
-
-      console.info(
-        "Interaksi diterima. Sambungkan API refresh resmi provider di requestProviderApprovedAdRefresh() jika tersedia dan diizinkan."
-      );
-    }
-
-
-    /* =========================================================
-       SNOW FX
-       ========================================================= */
-
-    function startSnow() {
-      const fx =
-        document.getElementById("fxCanvas");
-
-      const pile =
-        document.getElementById("pileCanvas");
-
-      const ctxFx =
-        fx.getContext("2d");
-
-      /*
-        pile dipertahankan agar struktur halaman lama tetap sama.
-      */
-      pile.getContext("2d");
-
-      let flakes = [];
-      let running = true;
-      let animationId = null;
-
-
-      function resize() {
-        fx.width =
-          pile.width =
-          window.innerWidth;
-
-        fx.height =
-          pile.height =
-          window.innerHeight;
-
-        const amount =
-          window.innerWidth <= 600
-            ? 48
-            : 80;
-
-        flakes =
-          Array.from(
-            { length: amount },
-            () => ({
-              x:
-                Math.random() *
-                fx.width,
-
-              y:
-                Math.random() *
-                fx.height,
-
-              r:
-                Math.random() *
-                  2 +
-                1,
-
-              v:
-                Math.random() *
-                  .5 +
-                .2,
-
-              drift:
-                Math.random() *
-                  .18 -
-                .09
-            })
-          );
-      }
-
-
-      function tick() {
-        if (!running) {
-          return;
-        }
-
-        ctxFx.clearRect(
-          0,
-          0,
-          fx.width,
-          fx.height
-        );
-
-        for (
-          let i = 0;
-          i < flakes.length;
-          i++
-        ) {
-          const f = flakes[i];
-
-          ctxFx.beginPath();
-
-          ctxFx.arc(
-            f.x,
-            f.y,
-            f.r,
-            0,
-            Math.PI * 2
-          );
-
-          ctxFx.fillStyle =
-            "rgba(255,255,255,.88)";
-
-          ctxFx.fill();
-
-          f.y += f.v;
-          f.x += f.drift;
-
-          if (
-            f.y >
-            fx.height + 5
-          ) {
-            f.y = -5;
-            f.x =
-              Math.random() *
-              fx.width;
+            if (f.x > window.innerWidth + 5) {
+              f.x = -5;
+            }
           }
 
-          if (
-            f.x < -5
-          ) {
-            f.x =
-              fx.width + 5;
-          }
-
-          if (
-            f.x >
-            fx.width + 5
-          ) {
-            f.x = -5;
-          }
+          rafId = requestAnimationFrame(tick);
         }
 
-        animationId =
-          requestAnimationFrame(
-            tick
-          );
-      }
+        window.addEventListener("resize", resize, { passive: true });
 
+        document.addEventListener("visibilitychange", function () {
+          running = !document.hidden;
 
-      window.addEventListener(
-        "resize",
-        resize,
-        { passive: true }
-      );
-
-      resize();
-      tick();
-
-
-      document.addEventListener(
-        "visibilitychange",
-        () => {
-          running =
-            !document.hidden;
-
-          if (
-            !running &&
-            animationId
-          ) {
-            cancelAnimationFrame(
-              animationId
-            );
-
-            animationId = null;
+          if (!running && rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
           }
 
-          if (
-            running &&
-            !animationId
-          ) {
+          if (running && !rafId) {
             tick();
           }
-        }
-      );
-    }
+        });
 
+        resize();
+        tick();
+      }
 
-    /* =========================================================
-       INIT
-       ========================================================= */
-
-    window.addEventListener(
-      "load",
-      () => {
+      window.addEventListener("load", function () {
         startSnow();
+      });
 
-        /*
-          Lifecycle TIDAK otomatis berjalan saat load.
-          Ia menunggu trigger klik pertama dari halaman Special
-          melalui postMessage, sesuai mekanisme yang diminta.
-        */
-      },
-      { once: true }
-    );
-
-  })();
+    })();
   </script>
 
 </body>
