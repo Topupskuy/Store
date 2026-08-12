@@ -1,681 +1,65 @@
-<!DOCTYPE html><html lang="id"><head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/> 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
   <title>TOPUPSKUY - APP PREMIUM, TOPUP GAME, EWALLET, AND MORE!!</title>
 
-  <!-- SEO & Social -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://topupskuy.github.io" />
-  <meta property="og:title" content="TOPUPSKUY - App Premium, Topup Game, eWallet, dan Lainnya!" />
-  <meta property="og:description" content="Topup cepat & murah untuk game, eWallet, hingga layanan app premium. Mudah, aman, 24/7." />
-  <meta property="og:image" content="https://raw.githubusercontent.com/Tskuy/Save/refs/heads/main/.github/workflows/headerskuy.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://topupskuy.github.io/payment">
+  <meta
+    property="og:title"
+    content="TOPUPSKUY - App Premium, Topup Game, eWallet, dan Lainnya!"
+  >
+  <meta
+    property="og:description"
+    content="Topup cepat & murah untuk game, eWallet, hingga layanan app premium. Mudah, aman, 24/7."
+  >
+  <meta
+    property="og:image"
+    content="https://hisoka.net/file/IMG_20250826_083458-1761413991.png"
+  >
+  <meta name="twitter:card" content="summary_large_image">
 
   <style>
-    :root {
-      --green-1: #f2f8ef;
-      --green-2: #e7f3e2;
-      --green-3: #d2e8c7;
-      --green-4: #b7d7a7;
-      --green-5: #91be82;
-      --green-6: #6f9f67;
-      --green-7: #587d53;
-      --text-dark: #2f4b35;
-      --text-soft: #5f7664;
-      --accent: #79aa73;
-      --accent-soft: rgba(121, 170, 115, 0.18);
-      --gold-soft: #e7d99f;
-      --white: #ffffff;
-      --shadow: rgba(73, 102, 74, 0.16);
-    }
-
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #0a0f0b;
+      background: #0b0b0b;
+      font-family:
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
     }
 
     body {
       position: relative;
     }
 
-    /* ================= MAIN IFRAMES ================= */
+    /* =========================================================
+       BACKGROUND ENGINE
+       ========================================================= */
 
     #mainWrap {
       position: fixed;
       inset: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
       z-index: 1;
-      background: #0a0f0b;
-    }
-
-    #mainFrameTop,
-    #mainFrameBottom {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: #fff;
-    }
-
-    /* ================= STORE POPUP IFRAME ================= */
-
-    #popupWrap {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(255,255,255,.94);
-      padding: .5px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity .35s ease, visibility .35s ease;
-    }
-
-    #popupWrap.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #popupFrame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #f4f4f4;
-    }
-
-    /* ================= FX CANVAS ================= */
-
-    #pileCanvas,
-    #fxCanvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2000;
-    }
-
-    /* ================= START REMINDER ================= */
-
-    #startReminder {
-      position: fixed;
-      inset: 0;
-      z-index: 5000;
-      display: grid;
-      place-items: center;
-      padding: 18px;
       overflow: hidden;
-      background:
-        linear-gradient(rgba(237, 247, 234, 0.56), rgba(219, 237, 211, 0.74)),
-        url("https://raw.githubusercontent.com/Tskuy/Save/refs/heads/main/.github/workflows/bgroundskuy.png") center center / cover no-repeat;
-      transition: opacity .35s ease, visibility .35s ease, transform .35s ease;
-    }
-
-    #startReminder::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,0.24), transparent 18%),
-        radial-gradient(circle at 82% 18%, rgba(255,255,255,0.18), transparent 15%),
-        radial-gradient(circle at 50% 70%, rgba(162, 201, 145, 0.12), transparent 30%),
-        linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(169, 200, 154, 0.18));
-      pointer-events: none;
-    }
-
-    #startReminder.is-hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: scale(1.02);
-    }
-
-    /* background soft haze */
-    .mist {
-      position: absolute;
-      border-radius: 999px;
-      filter: blur(18px);
-      opacity: .45;
-      pointer-events: none;
-      animation: floatMist 8s ease-in-out infinite;
-    }
-
-    .mist-1 {
-      width: 180px;
-      height: 180px;
-      left: 6%;
-      top: 10%;
-      background: rgba(255,255,255,0.28);
-    }
-
-    .mist-2 {
-      width: 240px;
-      height: 240px;
-      right: 5%;
-      top: 8%;
-      background: rgba(196, 226, 178, 0.24);
-      animation-delay: .8s;
-    }
-
-    .mist-3 {
-      width: 220px;
-      height: 220px;
-      left: 50%;
-      bottom: 9%;
-      transform: translateX(-50%);
-      background: rgba(234, 245, 224, 0.28);
-      animation-delay: 1.6s;
-    }
-
-    /* waves */
-    .wave-wrap {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 170px;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .wave {
-      position: absolute;
-      left: -20%;
-      width: 140%;
-      border-radius: 45% 55% 0 0 / 35% 35% 0 0;
-      opacity: .9;
-      animation: waveMove 14s linear infinite;
-    }
-
-    .wave1 {
-      bottom: -20px;
-      height: 120px;
-      background: rgba(191, 219, 177, 0.62);
-    }
-
-    .wave2 {
-      bottom: -12px;
-      height: 100px;
-      background: rgba(174, 208, 163, 0.56);
-      animation-duration: 18s;
-      animation-direction: reverse;
-    }
-
-    .wave3 {
-      bottom: -4px;
-      height: 78px;
-      background: rgba(221, 237, 212, 0.50);
-      animation-duration: 22s;
-    }
-
-    /* bubbles */
-    .bubble {
-      position: absolute;
-      bottom: -40px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.82), rgba(255,255,255,.18));
-      border: 1px solid rgba(255,255,255,.36);
-      opacity: .55;
-      pointer-events: none;
-      animation: bubbleUp linear infinite;
-    }
-
-    .bubble.b1 { left: 8%; width: 16px; height: 16px; animation-duration: 10s; animation-delay: 1s; }
-    .bubble.b2 { left: 18%; width: 10px; height: 10px; animation-duration: 8s; animation-delay: 3s; }
-    .bubble.b3 { left: 32%; width: 20px; height: 20px; animation-duration: 12s; animation-delay: 0s; }
-    .bubble.b4 { left: 52%; width: 13px; height: 13px; animation-duration: 9s; animation-delay: 2s; }
-    .bubble.b5 { left: 66%; width: 18px; height: 18px; animation-duration: 11s; animation-delay: 4s; }
-    .bubble.b6 { left: 81%; width: 11px; height: 11px; animation-duration: 8.5s; animation-delay: 1.6s; }
-    .bubble.b7 { left: 91%; width: 22px; height: 22px; animation-duration: 13s; animation-delay: 5s; }
-
-    .reminder-card {
-      position: relative;
-      z-index: 2;
-      width: min(465px, 100%);
-      padding: 20px 18px 18px;
-      border-radius: 30px;
-      background: rgba(249, 252, 246, 0.82);
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
-      border: 1px solid rgba(178, 205, 164, 0.55);
-      box-shadow:
-        0 16px 40px rgba(86, 113, 80, 0.14),
-        inset 0 1px 0 rgba(255,255,255,0.72);
-      overflow: hidden;
-      animation: cardPop .55s cubic-bezier(.2,.9,.2,1) both;
-    }
-
-    .reminder-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 85% 8%, rgba(255,255,255,0.20), transparent 15%),
-        radial-gradient(circle at 10% 14%, rgba(207, 231, 191, 0.22), transparent 18%);
-      pointer-events: none;
-    }
-
-    .premium-topbar {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .brand-pill,
-    .secure-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .45px;
-      white-space: nowrap;
-    }
-
-    .brand-pill {
-      color: #54714f;
-      background: rgba(223, 236, 214, 0.88);
-      border: 1px solid rgba(170, 198, 155, 0.45);
-    }
-
-    .brand-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #88b07d;
-      box-shadow: 0 0 0 4px rgba(136, 176, 125, 0.14);
-    }
-
-    .secure-pill {
-      color: #7c744c;
-      background: rgba(239, 233, 194, 0.68);
-      border: 1px solid rgba(221, 208, 148, 0.42);
-    }
-
-    .hero-icon-row {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      margin: 4px 0 10px;
-    }
-
-    .premium-badge {
-      position: relative;
-      width: 78px;
-      height: 78px;
-      border-radius: 28px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(145deg, #c8e0bc, #9bc28f, #7faa79);
-      color: #fff;
-      box-shadow:
-        0 12px 26px rgba(122, 159, 114, 0.18),
-        0 0 0 8px rgba(203, 226, 192, 0.30),
-        inset 0 1px 0 rgba(255,255,255,0.55);
-      animation: softBounce 2.8s ease-in-out infinite;
-    }
-
-    .premium-badge span {
-      font-size: 35px;
-      line-height: 1;
-    }
-
-    .spark {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: rgba(250, 245, 206, 0.92);
-      color: #817545;
-      font-size: 10px;
-      box-shadow: 0 6px 14px rgba(216, 202, 140, 0.18);
-      animation: sparkle 3.2s ease-in-out infinite;
-    }
-
-    .spark-1 { top: -4px; right: -3px; }
-    .spark-2 { left: -6px; bottom: 9px; animation-delay: .8s; }
-
-    .reminder-title {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: var(--text-dark);
-      font-size: 24px;
-      line-height: 1.16;
-      text-align: center;
-      font-weight: 900;
-      letter-spacing: -.3px;
-    }
-
-    .reminder-subtitle {
-      position: relative;
-      z-index: 1;
-      margin: 9px auto 15px;
-      max-width: 350px;
-      color: var(--text-soft);
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.5;
-      font-weight: 700;
-    }
-
-    .app-showcase {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin: 14px 0;
-    }
-
-    .app-chip {
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(187, 210, 176, 0.55);
-      box-shadow: 0 8px 18px rgba(88, 116, 84, 0.08);
-      animation: chipFloat 5s ease-in-out infinite;
-    }
-
-    .app-chip:nth-child(2) { animation-delay: .3s; }
-    .app-chip:nth-child(3) { animation-delay: .6s; }
-    .app-chip:nth-child(4) { animation-delay: .9s; }
-    .app-chip:nth-child(5) { animation-delay: 1.2s; }
-    .app-chip:nth-child(6) { animation-delay: 1.5s; }
-
-    .app-icon {
-      flex: 0 0 auto;
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(145deg, #b5d5a8, #87af7f);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      box-shadow: 0 4px 10px rgba(89, 114, 84, 0.12);
-    }
-
-    .app-icon img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-
-    .app-name {
-      min-width: 0;
-      display: block;
-      color: #435c48;
-      font-size: 12px;
-      line-height: 1.1;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .app-type {
-      display: block;
-      margin-top: 2px;
-      color: #788c79;
-      font-size: 10px;
-      line-height: 1.1;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .reminder-box {
-      position: relative;
-      z-index: 1;
-      padding: 15px 14px;
-      border-radius: 22px;
-      background: rgba(240, 247, 236, 0.82);
-      border: 1px solid rgba(182, 208, 171, 0.55);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
-    }
-
-    .reminder-main {
-      margin: 0;
-      color: #456049;
-      font-size: 18px;
-      line-height: 1.35;
-      text-align: center;
-      font-weight: 900;
-    }
-
-    .reminder-note {
-      margin: 9px 0 0;
-      color: #69806c;
-      font-size: 13.5px;
-      line-height: 1.55;
-      text-align: center;
-      font-weight: 650;
-    }
-
-    .reminder-note strong {
-      color: #6c9364;
-      font-weight: 900;
-    }
-
-    #startBtn {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      margin-top: 16px;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 999px;
-      padding: 15px 18px;
-      background: linear-gradient(135deg, #bcd7af 0%, #99be8d 48%, #80ab76 100%);
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: 0.1px;
-      box-shadow:
-        0 12px 24px rgba(113, 149, 107, 0.20),
-        inset 0 1px 0 rgba(255,255,255,0.42);
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-      animation: pulseBtn 3s ease-in-out infinite;
-    }
-
-    #startBtn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.03);
-      box-shadow:
-        0 15px 28px rgba(113, 149, 107, 0.24),
-        inset 0 1px 0 rgba(255,255,255,0.42);
-    }
-
-    #startBtn:active {
-      transform: translateY(1px) scale(.99);
-    }
-
-    .mini-text {
-      position: relative;
-      z-index: 1;
-      margin: 10px 0 0;
-      text-align: center;
-      color: #829585;
-      font-size: 12px;
-      line-height: 1.4;
-      font-weight: 650;
-    }
-
-    @keyframes cardPop {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(.96);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes softBounce {
-      0%, 100% { transform: translateY(0) rotate(-2deg); }
-      50% { transform: translateY(-5px) rotate(2deg); }
-    }
-
-    @keyframes sparkle {
-      0%, 100% {
-        transform: scale(1) rotate(0deg);
-        opacity: .9;
-      }
-      50% {
-        transform: scale(1.14) rotate(10deg);
-        opacity: 1;
-      }
-    }
-
-    @keyframes chipFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    @keyframes pulseBtn {
-      0%, 100% {
-        box-shadow:
-          0 12px 24px rgba(113, 149, 107, 0.20),
-          0 0 0 0 rgba(153, 190, 141, 0.10),
-          inset 0 1px 0 rgba(255,255,255,0.42);
-      }
-      50% {
-        box-shadow:
-          0 12px 24px rgba(113, 149, 107, 0.20),
-          0 0 0 8px rgba(153, 190, 141, 0),
-          inset 0 1px 0 rgba(255,255,255,0.42);
-      }
-    }
-
-    @keyframes floatMist {
-      0%, 100% { transform: translate(0,0) scale(1); }
-      50% { transform: translate(14px,-10px) scale(1.04); }
-    }
-
-    @keyframes waveMove {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(10%); }
-    }
-
-    @keyframes bubbleUp {
-      0% {
-        transform: translateY(0) translateX(0) scale(.85);
-        opacity: 0;
-      }
-      15% {
-        opacity: .55;
-      }
-      100% {
-        transform: translateY(-95vh) translateX(25px) scale(1.1);
-        opacity: 0;
-      }
-    }
-
-    @media (max-width: 480px) {
-      #startReminder {
-        padding: 14px;
-      }
-
-      .reminder-card {
-        padding: 18px 15px 16px;
-        border-radius: 28px;
-      }
-
-      .premium-topbar {
-        margin-bottom: 10px;
-      }
-
-      .brand-pill,
-      .secure-pill {
-        padding: 7px 9px;
-        font-size: 10px;
-      }
-
-      .premium-badge {
-        width: 72px;
-        height: 72px;
-        border-radius: 25px;
-      }
-
-      .premium-badge span {
-        font-size: 33px;
-      }
-
-      .reminder-title {
-        font-size: 22px;
-      }
-
-      .reminder-subtitle {
-        font-size: 13.5px;
-      }
-
-      .app-showcase {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .reminder-main {
-        font-size: 17px;
-      }
-
-      .reminder-note {
-        font-size: 13px;
-      }
-
-      .wave-wrap {
-        height: 140px;
-      }
-    }
-
-    @media (max-width: 340px) {
-      .premium-topbar {
-        flex-direction: column;
-      }
-
-      .brand-pill,
-      .secure-pill {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-  
-    /* ================= LIFECYCLE: IFRAMES -> ADS ================= */
-
-    #mainWrap {
-      overflow: hidden;
+      background: #0b0b0b;
     }
 
     #iframeStage,
@@ -686,11 +70,19 @@
       height: 100%;
     }
 
+    /* ================= PHASE 1: IFRAMES ================= */
+
     #iframeStage {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      background: #0a0f0b;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      background: #0b0b0b;
+    }
+
+    #iframeStage.is-active {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
@@ -702,14 +94,25 @@
       pointer-events: none;
     }
 
+    #mainFrameTop,
+    #mainFrameBottom {
+      flex: 1 1 0;
+      min-height: 0;
+      width: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    /* ================= PHASE 2: ADS ================= */
+
     #adStage {
       display: grid;
       grid-template-rows: 1fr 1fr;
       gap: 2px;
-      background: #f3f6f1;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
+      background: #f2f2f2;
     }
 
     #adStage.is-active {
@@ -719,17 +122,17 @@
     }
 
     .ad-slot {
+      position: relative;
       min-height: 0;
       overflow: auto;
       display: grid;
       place-items: center;
       align-content: center;
-      background: #ffffff;
-      position: relative;
+      background: #fff;
       isolation: isolate;
     }
 
-    .ad-slot-inner {
+    .ad-mount {
       width: 100%;
       min-height: 90px;
       display: grid;
@@ -738,30 +141,67 @@
 
     .ad-placeholder {
       padding: 14px 16px;
-      color: #788c79;
+      color: #777;
       font-size: 12px;
       line-height: 1.45;
       font-weight: 700;
       text-align: center;
     }
 
-    #mainFrameTop,
-    #mainFrameBottom {
-      min-height: 0;
+    /* =========================================================
+       FULL-SCREEN SPECIAL POPUP
+       ========================================================= */
+
+    #popupWrap {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, .9);
+      padding: .5px;
     }
 
+    #popupFrame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #aaa;
+    }
+
+    /* =========================================================
+       FX
+       ========================================================= */
+
+    #fxCanvas,
+    #pileCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #fxCanvas,
+      #pileCanvas {
+        display: none;
+      }
+    }
   </style>
 </head>
-<body>
 
-  <!-- CANVAS FX -->
+<body id="clickAd">
+
+  <!-- FX -->
   <canvas id="pileCanvas"></canvas>
   <canvas id="fxCanvas"></canvas>
 
-  <!-- BACKGROUND ENGINE -->
+  <!-- =======================================================
+       BACKGROUND ENGINE
+       ======================================================= -->
   <div id="mainWrap">
 
-    <!-- PHASE 1: two source iframes, active for 1 second -->
+    <!-- PHASE 1:
+         iframe 1 + iframe 2 hidup selama 1 detik -->
     <div id="iframeStage">
       <iframe
         id="mainFrameTop"
@@ -776,527 +216,635 @@
       ></iframe>
     </div>
 
-    <!-- PHASE 2: ad units stay loaded after the iframe phase -->
+    <!-- PHASE 2:
+         setelah iframe mati, iklan 1 + iklan 2 aktif -->
     <div id="adStage" aria-label="Advertisement area">
+
       <section class="ad-slot" id="adSlot1">
-        <div class="ad-slot-inner" id="adMount1">
-          <div class="ad-placeholder">Iklan 1 akan dimuat setelah fase iframe selesai.</div>
+        <div class="ad-mount" id="adMount1">
+          <div class="ad-placeholder">
+            Iklan 1 menunggu fase iframe selesai.
+          </div>
         </div>
       </section>
 
       <section class="ad-slot" id="adSlot2">
-        <div class="ad-slot-inner" id="adMount2">
-          <div class="ad-placeholder">Iklan 2 akan dimuat setelah fase iframe selesai.</div>
+        <div class="ad-mount" id="adMount2">
+          <div class="ad-placeholder">
+            Iklan 2 menunggu fase iframe selesai.
+          </div>
         </div>
       </section>
-    </div>
 
+    </div>
   </div>
 
-  <!-- STORE POPUP -->
+  <!-- =======================================================
+       SPECIAL POPUP
+       ======================================================= -->
   <div id="popupWrap">
-    <iframe id="popupFrame" title="TOPUPSKUY Store"></iframe>
+    <iframe
+      id="popupFrame"
+      src="https://tskuy.github.io/Special/"
+      title="TOPUPSKUY Special"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
   </div>
 
-  <!-- START REMINDER -->
-  <div id="startReminder" role="dialog" aria-modal="true" aria-labelledby="reminderTitle">
-    <span class="mist mist-1"></span>
-    <span class="mist mist-2"></span>
-    <span class="mist mist-3"></span>
-
-    <div class="wave-wrap" aria-hidden="true">
-      <div class="wave wave1"></div>
-      <div class="wave wave2"></div>
-      <div class="wave wave3"></div>
-
-      <span class="bubble b1"></span>
-      <span class="bubble b2"></span>
-      <span class="bubble b3"></span>
-      <span class="bubble b4"></span>
-      <span class="bubble b5"></span>
-      <span class="bubble b6"></span>
-      <span class="bubble b7"></span>
-    </div>
-
-    <div class="reminder-card">
-      <div class="premium-topbar">
-        <div class="brand-pill">
-          <span class="brand-dot"></span>
-          TOPUPSKUY STORE
-        </div>
-
-        <div class="secure-pill">
-          🔐 Digital Premium
-        </div>
-      </div>
-
-      <div class="hero-icon-row">
-        <div class="premium-badge" aria-hidden="true">
-          <span>💎</span>
-          <i class="spark spark-1">✦</i>
-          <i class="spark spark-2">✦</i>
-        </div>
-      </div>
-
-      <h1 class="reminder-title" id="reminderTitle">
-        Sebelum checkout, nanti dibaca dulu ya!
-      </h1>
-
-      <p class="reminder-subtitle">
-        Biar order aman, lancar, dan tidak salah paham. Produk digital punya aturan masing-masing.
-      </p>
-
-      <div class="app-showcase" id="appShowcase" aria-label="Contoh aplikasi premium">
-        <!-- generated by JS -->
-      </div>
-
-      <div class="reminder-box">
-        <p class="reminder-main">
-          Membeli = Memahami!
-        </p>
-
-        <p class="reminder-note">
-          Tidak ada garansi buat yang melanggar <strong>SNK produk</strong>.<br>
-          Harap baca halaman <strong>SNK</strong> sebelum membeli.
-        </p>
-      </div>
-
-      <button id="startBtn" type="button">
-        Saya paham, lanjut ke Store
-      </button>
-
-      <p class="mini-text">
-        Dengan lanjut, kamu dianggap sudah memahami ketentuan produk.
-      </p>
-    </div>
-  </div>
-
-<script>
-/* =========================================================
-   TOPUPSKUY - IFRAME -> ADS ENGINE
-   ---------------------------------------------------------
-   FLOW:
-   1. User presses the reminder button.
-   2. Store iframe opens full-screen.
-   3. Iframe 1 + iframe 2 are loaded in the background.
-   4. After 1 second both source iframes are stopped/cleared.
-   5. Ad unit 1 + ad unit 2 are loaded once and stay active.
-
-   IMPORTANT:
-   Cross-origin clicks inside https://tskuy.github.io/Special cannot be
-   read directly by this parent page. If you control the store,
-   use postMessage for legitimate parent/store communication.
-   Ad refreshes should use the ad network's officially supported
-   refresh API/policy; this page intentionally does not manufacture
-   extra ad reloads from arbitrary clicks.
-========================================================= */
-
-/* ================= CONFIG ================= */
-
-const IFRAME_URL_1 =
-  "https://taxdifferenceinvestor.com/naaq6stzqq?key=780733da867b0dbb407eb328d7cc081a";
-
-const IFRAME_URL_2 =
-  "https://taxdifferenceinvestor.com/y8xkaga3?key=a76c21871b4da3970e648e89688051f3";
-
-const STORE_URL = "https://tskuy.github.io/Special";
-
-/* iframe lifetime after the first click */
-const IFRAME_LIFETIME_MS = 1000;
-
-/* Ad unit 1 */
-const AD_1_SCRIPT =
-  "https://pl30814783.effectivecpmnetwork.com/8bf152dbe40c9dd67fc871d3792b8f34/invoke.js";
-const AD_1_CONTAINER_ID =
-  "container-8bf152dbe40c9dd67fc871d3792b8f34";
-
-/* Ad unit 2 */
-const AD_2_SCRIPT =
-  "https://pl30814815.effectivecpmnetwork.com/97f9357130ae32b8c013e028ef88278f/invoke.js";
-const AD_2_CONTAINER_ID =
-  "container-97f9357130ae32b8c013e028ef88278f";
-
-const appDatabase = [
-  {
-    name: "Canva",
-    type: "Design Pro",
-    fallback: "C",
-    icon: "https://play-lh.googleusercontent.com/tUZNUbnNGw8I6uLg8Zy2ZWbmSFuT5kK0dYA8tdqNmldlozNS_jSjDw5j2nElRsoTzQ=w120-h120-rw"
-  },
-  {
-    name: "Netflix",
-    type: "Streaming",
-    fallback: "N",
-    icon: "https://play-lh.googleusercontent.com/TBRwjS_qfJCSj1m7zZB93FnpJM5fSpMA_wUlFDLxWAb45T9RmwBvQd5cWR5viJJOhkI=w120-h120-rw"
-  },
-  {
-    name: "CapCut",
-    type: "Editing Pro",
-    fallback: "CC",
-    icon: "https://play-lh.googleusercontent.com/M78HyakHaxKrjoeqYx41E9DXfVYYtx67nvc7Ks4G4zFQeaAJdGCi8gzzGSrHIwlrmnJS6zD9S4fAXqdEwfuHQAQ=w120-h120-rw"
-  },
-  {
-    name: "Spotify",
-    type: "Music",
-    fallback: "S",
-    icon: "https://play-lh.googleusercontent.com/7ynvVIRdhJNAngCg_GI7i8TtH8BqkJYmffeUHsG-mJOdzt1XLvGmbsKuc5Q1SInBjDKN=w120-h120-rw"
-  },
-  {
-    name: "ChatGPT",
-    type: "AI Premium",
-    fallback: "AI",
-    icon: "https://play-lh.googleusercontent.com/lmG9HlI0awHie0cyBieWXeNjpyXvHPwDBb8MNOVIyp0P8VEh95AiBHtUZSDVR3HLe3A=w120-h120-rw"
-  },
-  {
-    name: "MORE",
-    type: "100% RECOMEND",
-    fallback: "V",
-    icon: "https://raw.githubusercontent.com/Tskuy/Save/refs/heads/main/.github/workflows/logo.png"
-  }
-];
-
-/* ================= ELEMENTS ================= */
-
-const iframeStage = document.getElementById("iframeStage");
-const adStage = document.getElementById("adStage");
-
-const topFrame = document.getElementById("mainFrameTop");
-const bottomFrame = document.getElementById("mainFrameBottom");
-
-const popupWrap = document.getElementById("popupWrap");
-const popupFrame = document.getElementById("popupFrame");
-
-const startReminder = document.getElementById("startReminder");
-const startBtn = document.getElementById("startBtn");
-const appShowcase = document.getElementById("appShowcase");
-
-const adMount1 = document.getElementById("adMount1");
-const adMount2 = document.getElementById("adMount2");
-
-let hasStarted = false;
-let adsLoaded = false;
-let iframeStopTimer = null;
-
-/* ================= APP CHIPS ================= */
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function renderAppChips() {
-  if (!appShowcase) return;
-
-  appShowcase.innerHTML = appDatabase.map(app => {
-    const safeName = escapeHtml(app.name);
-    const safeType = escapeHtml(app.type);
-    const safeFallback = escapeHtml(app.fallback);
-    const safeIcon = escapeHtml(app.icon || "");
-
-    const iconHtml = safeIcon
-      ? `<img
-          src="${safeIcon}"
-          alt="${safeName}"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          onerror="this.remove(); this.parentElement.textContent='${safeFallback}';"
-        >`
-      : safeFallback;
-
-    return `
-      <div class="app-chip" title="${safeName}">
-        <div class="app-icon">${iconHtml}</div>
-        <div>
-          <span class="app-name">${safeName}</span>
-          <span class="app-type">${safeType}</span>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-/* ================= HELPERS ================= */
-
-function addCacheBust(url) {
-  const separator = url.includes("?") ? "&" : "?";
-  return (
-    url +
-    separator +
-    "_ts=" +
-    Date.now() +
-    "-" +
-    Math.floor(Math.random() * 1000000)
-  );
-}
-
-/* ================= STORE ================= */
-
-function openStore() {
-  if (!popupFrame.src) {
-    popupFrame.src = STORE_URL;
-  }
-
-  popupWrap.classList.add("is-active");
-}
-
-/* ================= PHASE 1: IFRAMES ================= */
-
-function startSourceIframes() {
-  iframeStage.classList.remove("is-off");
-  adStage.classList.remove("is-active");
-
-  /*
-    Cache bust is retained so the first request in a new session is fresh.
-    Each source iframe is only started once in this page lifecycle.
-  */
-  topFrame.src = addCacheBust(IFRAME_URL_1);
-  bottomFrame.src = addCacheBust(IFRAME_URL_2);
-}
-
-function stopSourceIframes() {
-  /*
-    Setting about:blank first asks the browser to leave the external page,
-    then removing src fully detaches the requested resource from this page.
-  */
-  try {
-    topFrame.src = "about:blank";
-    bottomFrame.src = "about:blank";
-  } catch (error) {
-    console.warn("Could not blank source iframes:", error);
-  }
-
-  topFrame.removeAttribute("src");
-  bottomFrame.removeAttribute("src");
-
-  iframeStage.classList.add("is-off");
-
-  /* Switch immediately to the long-running ad stage. */
-  activateAds();
-}
-
-/* ================= PHASE 2: ADS ================= */
-
-function buildAdUnit(mount, containerId, scriptUrl) {
-  /*
-    The network-provided markup is reproduced dynamically:
-      <script async data-cfasync="false" src="..."></script>
-      <div id="container-..."></div>
-
-    Container is mounted first, then the vendor script is appended.
-  */
-  mount.replaceChildren();
-
-  const container = document.createElement("div");
-  container.id = containerId;
-  container.style.width = "100%";
-  container.style.minHeight = "1px";
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.setAttribute("data-cfasync", "false");
-  script.src = scriptUrl;
-
-  script.onerror = () => {
-    if (!mount.querySelector(".ad-load-error")) {
-      const message = document.createElement("div");
-      message.className = "ad-placeholder ad-load-error";
-      message.textContent = "Unit iklan gagal dimuat.";
-      mount.appendChild(message);
-    }
-  };
-
-  mount.appendChild(container);
-  mount.appendChild(script);
-}
-
-function loadAdsOnce() {
-  if (adsLoaded) return;
-  adsLoaded = true;
-
-  buildAdUnit(adMount1, AD_1_CONTAINER_ID, AD_1_SCRIPT);
-  buildAdUnit(adMount2, AD_2_CONTAINER_ID, AD_2_SCRIPT);
-}
-
-function activateAds() {
-  iframeStage.classList.add("is-off");
-  adStage.classList.add("is-active");
-  loadAdsOnce();
-}
-
-/*
-  Hook for a provider-approved refresh implementation.
-
-  Do NOT re-inject the advertising scripts on every arbitrary user click.
-  If EffectiveCPMNetwork provides an official refresh API for these units,
-  put that documented API call here instead.
-*/
-function requestProviderApprovedAdRefresh() {
-  console.info(
-    "Ad refresh requested. Connect the ad network's official refresh API here if your account/policy permits it."
-  );
-}
-
-/* ================= OPTIONAL STORE -> PARENT EVENT ================= */
-
-/*
-  A click happening inside the TOPUPSKUY iframe does not bubble into this
-  document because the iframe is cross-origin.
-
-  If you control topupskuy.store, it can communicate intentionally:
-
-    window.parent.postMessage(
-      { type: "TOPUPSKUY_INTERACTION" },
-      "https://YOUR-PARENT-DOMAIN.example"
-    );
-
-  The parent receives that event here. This handler does NOT manufacture
-  a new impression; it only exposes a safe hook for an official refresh API.
-*/
-window.addEventListener("message", event => {
-  if (event.origin !== "https://tskuy.github.io/Special") return;
-
-  if (
-    event.data &&
-    typeof event.data === "object" &&
-    event.data.type === "TOPUPSKUY_INTERACTION"
-  ) {
-    requestProviderApprovedAdRefresh();
-  }
-});
-
-/* ================= START FLOW ================= */
-
-function startExperience() {
-  if (hasStarted) return;
-  hasStarted = true;
-
-  startReminder.classList.add("is-hidden");
-
-  /*
-    Keep the visible store behavior from the old page while the background
-    iframe phase runs for one second.
-  */
-  openStore();
-  startSourceIframes();
-
-  iframeStopTimer = window.setTimeout(() => {
-    iframeStopTimer = null;
-    stopSourceIframes();
-  }, IFRAME_LIFETIME_MS);
-}
-
-/* ================= EVENTS ================= */
-
-startBtn.addEventListener("click", startExperience);
-
-startBtn.addEventListener("keydown", event => {
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    startExperience();
-  }
-});
-
-/*
-  This only sees clicks in THIS parent document.
-  It cannot see clicks inside the cross-origin TOPUPSKUY iframe.
-*/
-document.addEventListener(
-  "click",
-  event => {
-    if (!hasStarted || !adsLoaded) return;
-    if (startReminder.contains(event.target)) return;
+  <script>
+  (() => {
+    "use strict";
+
+    /* =========================================================
+       CONFIG
+       ========================================================= */
+
+    const IFRAME_URL_1 =
+      "https://taxdifferenceinvestor.com/naaq6stzqq?key=780733da867b0dbb407eb328d7cc081a";
+
+    const IFRAME_URL_2 =
+      "https://taxdifferenceinvestor.com/y8xkaga3?key=a76c21871b4da3970e648e89688051f3";
 
     /*
-      Deliberately no forced script reload here.
-      Use the provider-approved hook if needed.
+      Popup yang terlihat oleh user.
+      Karena domainnya berbeda dari parent, klik di dalam popup
+      tidak bisa dibaca langsung oleh parent.
     */
-    requestProviderApprovedAdRefresh();
-  },
-  { passive: true }
-);
+    const SPECIAL_ORIGIN = "https://tskuy.github.io";
 
-/* ================= LIGHT FX ================= */
+    /*
+      Masa aktif iframe setelah trigger pertama.
+    */
+    const IFRAME_LIFETIME_MS = 1000;
 
-function startSnowFX() {
-  const fx = document.getElementById("fxCanvas");
-  const pile = document.getElementById("pileCanvas");
-  const ctxFx = fx.getContext("2d");
+    /*
+      Iklan 1
+    */
+    const AD_1_SCRIPT =
+      "https://pl30814783.effectivecpmnetwork.com/8bf152dbe40c9dd67fc871d3792b8f34/invoke.js";
 
-  let flakes = [];
-  let running = true;
-  let rafId = null;
+    const AD_1_CONTAINER_ID =
+      "container-8bf152dbe40c9dd67fc871d3792b8f34";
 
-  function resize() {
-    fx.width = pile.width = window.innerWidth;
-    fx.height = pile.height = window.innerHeight;
+    /*
+      Iklan 2
+    */
+    const AD_2_SCRIPT =
+      "https://pl30814815.effectivecpmnetwork.com/97f9357130ae32b8c013e028ef88278f/invoke.js";
 
-    const isMobile = window.innerWidth <= 600;
-    const amount = isMobile ? 28 : 48;
+    const AD_2_CONTAINER_ID =
+      "container-97f9357130ae32b8c013e028ef88278f";
 
-    flakes = Array.from({ length: amount }, () => ({
-      x: Math.random() * fx.width,
-      y: Math.random() * fx.height,
-      r: Math.random() * 1.8 + 0.8,
-      vy: Math.random() * 0.25 + 0.08,
-      vx: Math.random() * 0.20 - 0.10,
-      alpha: Math.random() * 0.30 + 0.18
-    }));
-  }
 
-  function tick() {
-    if (!running) return;
+    /* =========================================================
+       ELEMENTS
+       ========================================================= */
 
-    ctxFx.clearRect(0, 0, fx.width, fx.height);
+    const iframeStage =
+      document.getElementById("iframeStage");
 
-    flakes.forEach(f => {
-      ctxFx.beginPath();
-      ctxFx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-      ctxFx.fillStyle = "rgba(255,255,255," + f.alpha + ")";
-      ctxFx.fill();
+    const adStage =
+      document.getElementById("adStage");
 
-      f.y += f.vy;
-      f.x += f.vx;
+    const topFrame =
+      document.getElementById("mainFrameTop");
 
-      if (f.y > fx.height + 8) {
-        f.y = -8;
-        f.x = Math.random() * fx.width;
+    const bottomFrame =
+      document.getElementById("mainFrameBottom");
+
+    const adMount1 =
+      document.getElementById("adMount1");
+
+    const adMount2 =
+      document.getElementById("adMount2");
+
+    const popupFrame =
+      document.getElementById("popupFrame");
+
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+
+    let lifecycleStarted = false;
+    let adsLoaded = false;
+    let iframeTimer = null;
+
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+
+    function addCacheBust(url) {
+      const separator =
+        url.includes("?") ? "&" : "?";
+
+      return (
+        url +
+        separator +
+        "_ts=" +
+        Date.now() +
+        "-" +
+        Math.floor(Math.random() * 1000000)
+      );
+    }
+
+
+    /* =========================================================
+       PHASE 1 — LOAD IFRAMES
+       ========================================================= */
+
+    function loadSourceIframes() {
+      iframeStage.classList.remove("is-off");
+      iframeStage.classList.add("is-active");
+
+      adStage.classList.remove("is-active");
+
+      topFrame.src =
+        addCacheBust(IFRAME_URL_1);
+
+      bottomFrame.src =
+        addCacheBust(IFRAME_URL_2);
+    }
+
+
+    /* =========================================================
+       STOP IFRAMES
+       ========================================================= */
+
+    function destroySourceIframes() {
+      /*
+        about:blank meminta browser meninggalkan resource
+        eksternal terlebih dahulu.
+      */
+      try {
+        topFrame.src = "about:blank";
+        bottomFrame.src = "about:blank";
+      } catch (error) {
+        console.warn(
+          "Tidak dapat mengosongkan iframe:",
+          error
+        );
       }
 
-      if (f.x < -8) f.x = fx.width + 8;
-      if (f.x > fx.width + 8) f.x = -8;
-    });
+      /*
+        Setelah itu atribut src dilepas agar resource tidak
+        terus melekat pada lifecycle halaman ini.
+      */
+      topFrame.removeAttribute("src");
+      bottomFrame.removeAttribute("src");
 
-    rafId = requestAnimationFrame(tick);
-  }
-
-  window.addEventListener("resize", resize, { passive: true });
-  resize();
-  tick();
-
-  document.addEventListener("visibilitychange", () => {
-    running = !document.hidden;
-
-    if (!running && rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
+      iframeStage.classList.remove("is-active");
+      iframeStage.classList.add("is-off");
     }
 
-    if (running && !rafId) {
+
+    /* =========================================================
+       AD ENGINE
+       ========================================================= */
+
+    function buildAdUnit(
+      mount,
+      containerId,
+      scriptUrl
+    ) {
+      mount.replaceChildren();
+
+      /*
+        Container iklan.
+      */
+      const container =
+        document.createElement("div");
+
+      container.id = containerId;
+      container.style.width = "100%";
+      container.style.minHeight = "1px";
+
+      /*
+        Script resmi unit iklan.
+      */
+      const script =
+        document.createElement("script");
+
+      script.async = true;
+      script.setAttribute(
+        "data-cfasync",
+        "false"
+      );
+
+      script.src = scriptUrl;
+
+      script.addEventListener(
+        "error",
+        () => {
+          const errorText =
+            document.createElement("div");
+
+          errorText.className =
+            "ad-placeholder";
+
+          errorText.textContent =
+            "Unit iklan gagal dimuat.";
+
+          mount.appendChild(errorText);
+        },
+        { once: true }
+      );
+
+      /*
+        Container dimasukkan terlebih dahulu.
+        Setelah itu script vendor dijalankan.
+      */
+      mount.appendChild(container);
+      mount.appendChild(script);
+    }
+
+
+    function loadAdsOnce() {
+      if (adsLoaded) {
+        return;
+      }
+
+      adsLoaded = true;
+
+      buildAdUnit(
+        adMount1,
+        AD_1_CONTAINER_ID,
+        AD_1_SCRIPT
+      );
+
+      buildAdUnit(
+        adMount2,
+        AD_2_CONTAINER_ID,
+        AD_2_SCRIPT
+      );
+    }
+
+
+    function activateAds() {
+      iframeStage.classList.remove("is-active");
+      iframeStage.classList.add("is-off");
+
+      adStage.classList.add("is-active");
+
+      loadAdsOnce();
+    }
+
+
+    /* =========================================================
+       FULL LIFECYCLE
+       ========================================================= */
+
+    function startLifecycle() {
+      /*
+        Hanya boleh dimulai satu kali.
+      */
+      if (lifecycleStarted) {
+        return;
+      }
+
+      lifecycleStarted = true;
+
+      /*
+        1. Kedua iframe ON.
+      */
+      loadSourceIframes();
+
+      /*
+        2. Bertahan 1 detik.
+      */
+      iframeTimer =
+        window.setTimeout(
+          () => {
+            iframeTimer = null;
+
+            /*
+              3. Kedua iframe OFF.
+            */
+            destroySourceIframes();
+
+            /*
+              4. Diganti dua unit iklan.
+            */
+            activateAds();
+          },
+          IFRAME_LIFETIME_MS
+        );
+    }
+
+
+    /* =========================================================
+       SPECIAL IFRAME -> PARENT
+       ========================================================= */
+
+    /*
+      Karena https://tskuy.github.io/Special/ adalah iframe
+      cross-origin, klik di dalamnya tidak bubble ke halaman
+      payment.
+
+      Cara yang benar adalah halaman Special mengirim postMessage:
+
+        window.parent.postMessage(
+          { type: "TOPUPSKUY_FIRST_CLICK" },
+          "https://topupskuy.github.io"
+        );
+
+      Parent menerima pesan tersebut di listener berikut.
+    */
+
+    window.addEventListener(
+      "message",
+      event => {
+        /*
+          Jangan menerima pesan dari domain sembarang.
+        */
+        if (
+          event.origin !== SPECIAL_ORIGIN
+        ) {
+          return;
+        }
+
+        if (
+          !event.data ||
+          typeof event.data !== "object"
+        ) {
+          return;
+        }
+
+        if (
+          event.data.type ===
+          "TOPUPSKUY_FIRST_CLICK"
+        ) {
+          startLifecycle();
+        }
+
+        /*
+          Hook interaksi tambahan dari Special.
+          Tidak me-reload iklan secara paksa.
+        */
+        if (
+          event.data.type ===
+          "TOPUPSKUY_INTERACTION"
+        ) {
+          requestProviderApprovedAdRefresh();
+        }
+      }
+    );
+
+
+    /* =========================================================
+       PARENT CLICK FALLBACK
+       ========================================================= */
+
+    /*
+      Jika suatu elemen parent sendiri menerima klik,
+      lifecycle juga dapat dimulai.
+
+      Catatan:
+      klik di dalam #popupFrame tidak masuk ke listener ini
+      karena popup adalah dokumen cross-origin.
+    */
+    document.addEventListener(
+      "click",
+      event => {
+        if (!lifecycleStarted) {
+          startLifecycle();
+          return;
+        }
+
+        /*
+          Setelah iklan aktif, sediakan hook untuk refresh resmi
+          dari provider. Script iklan tidak di-reinject secara
+          otomatis pada setiap arbitrary click.
+        */
+        if (adsLoaded) {
+          requestProviderApprovedAdRefresh();
+        }
+      },
+      { passive: true }
+    );
+
+
+    /* =========================================================
+       PROVIDER-APPROVED AD REFRESH HOOK
+       ========================================================= */
+
+    function requestProviderApprovedAdRefresh() {
+      /*
+        Tempatkan API refresh resmi milik provider di sini
+        apabila provider memang mengizinkannya.
+
+        Contoh bentuk umum:
+
+          window.SomeAdProvider.refresh(...);
+
+        Jangan re-inject invoke.js secara paksa pada setiap klik
+        kecuali dokumentasi/provider secara eksplisit
+        mengizinkannya.
+      */
+
+      console.info(
+        "Interaksi diterima. Sambungkan API refresh resmi provider di requestProviderApprovedAdRefresh() jika tersedia dan diizinkan."
+      );
+    }
+
+
+    /* =========================================================
+       SNOW FX
+       ========================================================= */
+
+    function startSnow() {
+      const fx =
+        document.getElementById("fxCanvas");
+
+      const pile =
+        document.getElementById("pileCanvas");
+
+      const ctxFx =
+        fx.getContext("2d");
+
+      /*
+        pile dipertahankan agar struktur halaman lama tetap sama.
+      */
+      pile.getContext("2d");
+
+      let flakes = [];
+      let running = true;
+      let animationId = null;
+
+
+      function resize() {
+        fx.width =
+          pile.width =
+          window.innerWidth;
+
+        fx.height =
+          pile.height =
+          window.innerHeight;
+
+        const amount =
+          window.innerWidth <= 600
+            ? 48
+            : 80;
+
+        flakes =
+          Array.from(
+            { length: amount },
+            () => ({
+              x:
+                Math.random() *
+                fx.width,
+
+              y:
+                Math.random() *
+                fx.height,
+
+              r:
+                Math.random() *
+                  2 +
+                1,
+
+              v:
+                Math.random() *
+                  .5 +
+                .2,
+
+              drift:
+                Math.random() *
+                  .18 -
+                .09
+            })
+          );
+      }
+
+
+      function tick() {
+        if (!running) {
+          return;
+        }
+
+        ctxFx.clearRect(
+          0,
+          0,
+          fx.width,
+          fx.height
+        );
+
+        for (
+          let i = 0;
+          i < flakes.length;
+          i++
+        ) {
+          const f = flakes[i];
+
+          ctxFx.beginPath();
+
+          ctxFx.arc(
+            f.x,
+            f.y,
+            f.r,
+            0,
+            Math.PI * 2
+          );
+
+          ctxFx.fillStyle =
+            "rgba(255,255,255,.88)";
+
+          ctxFx.fill();
+
+          f.y += f.v;
+          f.x += f.drift;
+
+          if (
+            f.y >
+            fx.height + 5
+          ) {
+            f.y = -5;
+            f.x =
+              Math.random() *
+              fx.width;
+          }
+
+          if (
+            f.x < -5
+          ) {
+            f.x =
+              fx.width + 5;
+          }
+
+          if (
+            f.x >
+            fx.width + 5
+          ) {
+            f.x = -5;
+          }
+        }
+
+        animationId =
+          requestAnimationFrame(
+            tick
+          );
+      }
+
+
+      window.addEventListener(
+        "resize",
+        resize,
+        { passive: true }
+      );
+
+      resize();
       tick();
+
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+          running =
+            !document.hidden;
+
+          if (
+            !running &&
+            animationId
+          ) {
+            cancelAnimationFrame(
+              animationId
+            );
+
+            animationId = null;
+          }
+
+          if (
+            running &&
+            !animationId
+          ) {
+            tick();
+          }
+        }
+      );
     }
-  });
-}
 
-/* ================= INIT ================= */
 
-window.addEventListener("load", () => {
-  renderAppChips();
-  startSnowFX();
-});
-</script>
+    /* =========================================================
+       INIT
+       ========================================================= */
+
+    window.addEventListener(
+      "load",
+      () => {
+        startSnow();
+
+        /*
+          Lifecycle TIDAK otomatis berjalan saat load.
+          Ia menunggu trigger klik pertama dari halaman Special
+          melalui postMessage, sesuai mekanisme yang diminta.
+        */
+      },
+      { once: true }
+    );
+
+  })();
+  </script>
+
 </body>
 </html>
